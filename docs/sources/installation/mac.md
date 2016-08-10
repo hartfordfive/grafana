@@ -6,8 +6,22 @@ page_keywords: grafana, installation, mac, osx, guide
 
 # Installing on Mac
 
-There is currently no binary build for Mac, but Grafana will happily build on Mac. Read the [build from
-source](/project/building_from_source) page for instructions on how to
-build it yourself.
+Installation can be done using [homebrew](http://brew.sh/)
+
+Install latest stable:
+
+```
+brew update
+brew install grafana
+```
+
+To start grafana look at the command printed after the homebrew install completes.
+
+To upgrade use the reinstall command
+
+```
+brew update
+brew reinstall grafana
+```
 
 

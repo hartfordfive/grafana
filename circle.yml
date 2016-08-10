@@ -1,6 +1,6 @@
 machine:
   node:
-    version: 4.0
+    version: 5.11.1
   environment:
     GOPATH: "/home/ubuntu/.go_workspace"
     ORG_PATH: "github.com/grafana"
@@ -12,16 +12,23 @@ dependencies:
     - mkdir -p ${GOPATH}/src/${ORG_PATH}
     - ln -s ~/grafana ${GOPATH}/src/${ORG_PATH}
     - go get github.com/tools/godep
+    - rm -rf node_modules
+    - npm install -g npm
     - npm install
 
 test:
   override:
-     # FMT
      - test -z "$(gofmt -s -l . | grep -v Godeps/_workspace/src/ | tee /dev/stderr)"
-     # GO VET
      - go vet ./pkg/...
-     # Go test
-     - godep go test -v ./pkg/...
-     # js tests
-     - ./node_modules/grunt-cli/bin/grunt test
+     # JS tests
+     - npm test
      - npm run coveralls
+     # GO tests
+     - godep go test -v ./pkg/...
+
+deployment:
+  master:
+    branch: master
+    owner: grafana
+    commands:
+      - ./trigger_grafana_packer.sh ${TRIGGER_GRAFANA_PACKER_CIRCLECI_TOKEN}

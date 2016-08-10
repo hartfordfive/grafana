@@ -1,5 +1,5 @@
 ----
-page_title: Dashboard JSON 
+page_title: Dashboard JSON
 page_description: Dashboard JSON Reference
 page_keywords: grafana, dashboard, json, documentation
 ---
@@ -26,7 +26,6 @@ When a user creates a new dashboard, a new dashboard JSON object is initialized 
 {
   "id": null,
   "title": "New dashboard",
-  "originalTitle": "New dashboard",
   "tags": [],
   "style": "dark",
   "timezone": "browser",
@@ -59,7 +58,6 @@ Each field in the dashboard JSON is explained below with its usage:
 | ---- | ----- |
 | **id** | unique dashboard id, an integer |
 | **title** | current title of dashboard |
-| **originalTitle** | title of dashboard when saved for the first time |
 | **tags** | tags associated with dashboard, an array of strings |
 | **style** | theme of dashboard, i.e. `dark` or `light` |
 | **timezone** | timezone of dashboard, i.e. `utc` or `browser` |
@@ -363,7 +361,7 @@ Usage of the fields is explained below:
         ],
         "query": "tag_values(cpu.utilization.average,env)",
         "refresh": false,
-        "refresh_on_load": false,
+        "refresh": false,
         "type": "query"
       },
       {
@@ -390,7 +388,7 @@ Usage of the fields is explained below:
           }
         ],
         "query": "tag_values(cpu.utilization.average,app)",
-        "refresh_on_load": false,
+        "refresh": false,
         "regex": "",
         "type": "query"
       }
@@ -413,7 +411,7 @@ Usage of the above mentioned fields in the templating section is explained below
 | **name** | name of variable |
 | **options** | array of variable text/value pairs available for selection on dashboard |
 | **query** | datasource query used to fetch values for a variable |
-| **refresh_on_load** | TODO |
+| **refresh** | TODO |
 | **regex** | TODO |
 | **type** | type of variable, i.e. `custom`, `query` or `interval` |
 

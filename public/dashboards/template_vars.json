@@ -1,7 +1,6 @@
 {
   "id": null,
   "title": "Templated Graphs Nested",
-  "originalTitle": "Templated Graphs Nested",
   "tags": [
     "showcase",
     "templated"
@@ -241,7 +240,7 @@
       {
         "type": "query",
         "datasource": null,
-        "refresh_on_load": false,
+        "refresh": false,
         "name": "metric",
         "options": [],
         "includeAll": true,
@@ -258,6 +257,6 @@
   "annotations": {
     "enable": false
   },
-  "refresh": false,
+  "refresh": 0,
   "version": 6
 }

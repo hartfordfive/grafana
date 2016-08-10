@@ -13,17 +13,20 @@ define([
   module.service('timeSrv', function($rootScope, $timeout, $routeParams, timer) {
     var self = this;
 
+    $rootScope.$on('zoom-out', function(e, factor) { self.zoomOut(factor); });
+
     this.init = function(dashboard) {
       timer.cancel_all();
 
       this.dashboard = dashboard;
       this.time = dashboard.time;
+      this.refresh = dashboard.refresh;
 
       this._initTimeFromUrl();
       this._parseTime();
 
-      if(this.dashboard.refresh) {
-        this.setAutoRefresh(this.dashboard.refresh);
+      if(this.refresh) {
+        this.setAutoRefresh(this.refresh);
       }
     };
 
@@ -47,9 +50,10 @@ define([
       if (value.length === 15) {
         return moment.utc(value, 'YYYYMMDDTHHmmss');
       }
-      var epoch = parseInt(value);
-      if (!_.isNaN(epoch)) {
-        return moment(epoch);
+
+      if (!isNaN(value)) {
+        var epoch = parseInt(value);
+        return moment.utc(epoch);
       }
 
       return null;
@@ -62,13 +66,20 @@ define([
       if ($routeParams.to) {
         this.time.to = this._parseUrlParam($routeParams.to) || this.time.to;
       }
+      if ($routeParams.refresh) {
+        this.refresh = $routeParams.refresh || this.refresh;
+      }
     };
 
     this.setAutoRefresh = function (interval) {
       this.dashboard.refresh = interval;
       if (interval) {
         var _i = kbn.interval_to_ms(interval);
-        this.start_scheduled_refresh(_i);
+        var wait_ms = _i - (Date.now() % _i);
+        $timeout(function () {
+          self.start_scheduled_refresh(_i);
+          self.refreshDashboard();
+        }, wait_ms);
       } else {
         this.cancel_scheduled_refresh();
       }
@@ -130,6 +141,24 @@ define([
       }
 
       return {from: from, to: to};
+    };
+
+    this.zoomOut = function(factor) {
+      var range = this.timeRange();
+
+      var timespan = (range.to.valueOf() - range.from.valueOf());
+      var center = range.to.valueOf() - timespan/2;
+
+      var to = (center + (timespan*factor)/2);
+      var from = (center - (timespan*factor)/2);
+
+      if (to > Date.now() && range.to <= Date.now()) {
+        var offset = to - Date.now();
+        from = from - offset;
+        to = Date.now();
+      }
+
+      this.setTime({from: moment.utc(from), to: moment.utc(to) });
     };
 
   });

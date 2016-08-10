@@ -26,7 +26,7 @@ Name | Description
 Name | The data source name, important that this is the same as in Grafana v1.x if you plan to import old dashboards.
 Default | Default data source means that it will be pre-selected for new panels.
 Url | The http protocol, ip and port of you elasticsearch server.
-Access | Proxy = access via Grafana backend, Direct = access directory from browser.
+Access | Proxy = access via Grafana backend, Direct = access directly from browser.
 
 Proxy access means that the Grafana backend will proxy all requests from the browser, and send them on to the Data Source. This is useful because it can eliminate CORS (Cross Origin Site Resource) issues, as well as eliminate the need to disseminate authentication details to the Data Source to the browser.
 
@@ -52,6 +52,40 @@ a time pattern for the index name or a wildcard.
 
 The Elasticsearch query editor allows you to select multiple metrics and group by multiple terms or filters. Use the plus and minus icons to the right to add / remove
 metrics or group bys. Some metrics and group by have options, click the option text to expand the the row to view and edit metric or group by options.
+
+## Pipeline metrics
+
+If you have Elasticsearch 2.x and Grafana 2.6 or above then you can use pipeline metric aggregations like
+**Moving Average** and **Derivative**. Elasticsearch pipeline metrics require another metric to be based on. Use the eye icon next to the metric
+to hide metrics from appearing in the graph. This is useful for metrics you only have in the query to be used
+in a pipeline metric.
+
+![](/img/elasticsearch/pipeline_metrics_editor.png)
+
+## Templating
+
+The Elasticsearch datasource supports two types of queries you can use to fill template variables with values.
+
+### Possible values for a field
+
+```json
+{"find": "terms", "field": "@hostname"}
+```
+
+### Fields filtered by type
+```json
+{"find": "fields", "type": "string"}
+```
+
+### Fields filtered by type, with filter
+```json
+{"find": "fields", "type": "string", "query": <lucene query>}
+```
+
+### Multi format / All format
+Use lucene format.
+
+
 
 ## Annotations
 TODO
